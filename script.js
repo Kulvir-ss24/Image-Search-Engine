@@ -30,7 +30,7 @@ async function getResponse() {
     if (page == 1) {
         images.innerHTML = "";
     }
-    load.style.display = "block";
+
 
     results.map((result) => {
         imageUrls[result.id] = {
@@ -61,7 +61,7 @@ async function getResponse() {
         li.innerHTML = html;
         images.appendChild(li);
     });
-    load.style.display = "none";
+    load.style.display = "block";
 }
 
 function updateDownloadUrl(imageId, resolution) {
@@ -70,22 +70,16 @@ function updateDownloadUrl(imageId, resolution) {
     downloadButton.setAttribute('data-url', selectedUrl);
 }
 
-function updateAspectRatio(imageId, aspectRatio) {
-    const downloadButton = document.querySelector(`.download[onclick="download('${imageId}')"]`);
-    downloadButton.setAttribute('data -aspect-ratio', aspectRatio);
-}
-
 function download(imageId) {
     const downloadButton = document.querySelector(`.download[onclick="download('${imageId}')"]`);
     const imgUrl = downloadButton.getAttribute('data-url');
-    const aspectRatio = downloadButton.getAttribute('data-aspect-ratio');
 
     fetch(imgUrl)
         .then(res => res.blob())
         .then(file => {
             let a = document.createElement("a");
             a.href = URL.createObjectURL(file);
-            a.download = `${imageId}_${aspectRatio}.jpg`;
+            a.download = new Date().getTime();
             a.click();
         })
         .catch(() => alert("failed download"));
@@ -107,6 +101,7 @@ btn.addEventListener("click", () => {
 });
 load.addEventListener("click", () => {
     page++;
+    load.style.display = "none"; 
     getResponse();
 });
 
